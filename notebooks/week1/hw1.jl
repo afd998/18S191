@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.17.5
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -79,7 +80,7 @@ $(html"<br>")
 """
 
 # ╔═╡ f51333a6-eded-11ea-34e6-bfbb3a69bcb0
-random_vect = missing # replace `missing` with your code!
+random_vect = rand(Float64, 10)
 
 # ╔═╡ 5da8cbe8-eded-11ea-2e43-c5b7cc71e133
 begin
@@ -99,8 +100,11 @@ md"#### Exerise 1.2
 
 # ╔═╡ bd907ee1-5253-4cae-b5a5-267dac24362a
 function my_sum(xs)
-	# your code here!
-	return missing
+	total = 0 
+	for i in xs
+		total += i
+	end
+	return total
 end
 
 # ╔═╡ 6640110a-d171-4b32-8d12-26979a36b718
@@ -112,8 +116,7 @@ md"#### Exerise 1.3
 
 # ╔═╡ 0ffa8354-edee-11ea-2883-9d5bfea4a236
 function mean(xs)
-	# your code here!
-	return missing
+	return my_sum(xs)/length(xs)
 end
 
 # ╔═╡ 1f104ce4-ee0e-11ea-2029-1d9c817175af
@@ -123,7 +126,7 @@ mean([1, 2, 3])
 md"👉 Define `m` to be the mean of `random_vect`."
 
 # ╔═╡ 2a391708-edee-11ea-124e-d14698171b68
-m = missing # replace `missing` with your code!
+m = mean(random_vect)
 
 # ╔═╡ e2863d4c-edef-11ea-1d67-332ddca03cc4
 md"""#### Exerise 1.4
@@ -148,8 +151,8 @@ md"""
 
 # ╔═╡ ec5efe8c-edef-11ea-2c6f-afaaeb5bc50c
 function demean(xs)
-	# your code here!
-	return missing
+	m = mean(xs)
+	return map(x -> x- m , xs)
 end
 
 # ╔═╡ d6ddafdd-1a44-48c7-b49a-554073cdf331
@@ -189,8 +192,11 @@ md"""
 
 # ╔═╡ b6b65b94-edf0-11ea-3686-fbff0ff53d08
 function create_bar()
-	# your code here!
-	return missing
+	xs =zeros(100)
+	for i in range(40, 60)
+		xs[i] = 1
+	end
+	return xs
 end
 
 # ╔═╡ 4a5e9d2c-dd90-4bb0-9e31-3f5c834406b4
@@ -257,8 +263,7 @@ md"""
 
 # ╔═╡ a8b2270a-600c-4f83-939e-dc5ab35f4735
 function get_red(pixel::AbstractRGB)
-	# your code here!
-	return missing
+	return pixel.r
 end
 
 # ╔═╡ c320b39d-4cea-4fa1-b1ce-053c898a67a6
@@ -272,8 +277,7 @@ md"""
 
 # ╔═╡ ebe1d05c-f6aa-437d-83cb-df0ba30f20bf
 function get_reds(image::AbstractMatrix)
-	# your code here!
-	return missing
+	return map(x -> get_red(x), image)
 end
 
 # ╔═╡ c427554a-6f6a-43f1-b03b-f83239887cee
@@ -309,7 +313,7 @@ Use the ➕ button at the bottom left of this cell to add more cells.
 """
 
 # ╔═╡ 21ba6e75-55a2-4614-9b5d-ea6378bf1d98
-
+value_as_color.(get_reds(philip_head))
 
 # ╔═╡ f7825c18-ff28-4e23-bf26-cc64f2f5049a
 md"""
@@ -319,7 +323,24 @@ md"""
 """
 
 # ╔═╡ d994e178-78fd-46ab-a1bc-a31485423cad
+function get_blue(pixel::AbstractRGB)
+	return pixel.b
+end
 
+# ╔═╡ 775d1067-f25a-4d93-8de7-7e1f7aa4ae4e
+function get_green(pixel::AbstractRGB)
+	return pixel.g
+end
+
+# ╔═╡ 5229678a-cafc-49d3-b30d-1672f3b9af59
+function get_blues(image::AbstractMatrix)
+	return map(x -> get_blue(x), image)
+end
+
+# ╔═╡ 039f5591-f3a0-407c-9274-d0a5745e35b4
+function get_greens(image::AbstractMatrix)
+	return map(x -> get_green(x), image)
+end
 
 # ╔═╡ c54ccdea-ee05-11ea-0365-23aaf053b7d7
 md"""
@@ -330,7 +351,7 @@ md"""
 # ╔═╡ f6898df6-ee07-11ea-2838-fde9bc739c11
 function mean_color(image)
 	# your code here!
-	return missing
+	return RGB(mean(get_reds(image)), mean(get_greens(image)), mean(get_blues(image)))
 end
 
 # ╔═╡ 5be9b144-ee0d-11ea-2a8d-8775de265a1d
@@ -343,9 +364,9 @@ _At the end of this homework, you can see all of your filters applied to your we
 
 # ╔═╡ 63e8d636-ee0b-11ea-173d-bd3327347d55
 function invert(color::AbstractRGB)
-	# your code here!
-	return missing
+	return RGB(1-color.r, 1-color.g, 1-color.b)
 end
+	 
 
 # ╔═╡ 2cc2f84e-ee0d-11ea-373b-e7ad3204bb00
 md"Let's invert some colors:"
@@ -381,8 +402,8 @@ md"""
 
 # ╔═╡ fbd1638d-8d7a-4d12-aff9-9c160cc3fd74
 function quantize(x::Number)
-	# your code here!
-	return missing
+	
+	return floor(x, digits= 1)
 end
 
 # ╔═╡ 7720740e-2d2b-47f7-98fd-500ed3eee479
@@ -437,7 +458,7 @@ The method you write should return a new `RGB` object, in which each component (
 # ╔═╡ 04e6b486-ceb7-45fe-a6ca-733703f16357
 function quantize(color::AbstractRGB)
 	# your code here!
-	return missing
+	return RGB(quantize(color.r), quantize(color.g), quantize(color.b))
 end
 
 # ╔═╡ f6bf64da-ee07-11ea-3efb-05af01b14f67
@@ -448,8 +469,7 @@ md"""
 
 # ╔═╡ 13e9ec8d-f615-4833-b1cf-0153010ccb65
 function quantize(image::AbstractMatrix)
-	# your code here!
-	return missing
+	return quantize.(image)
 end
 
 # ╔═╡ f6a655f8-ee07-11ea-13b6-43ca404ddfc7
@@ -469,8 +489,7 @@ md"""
 
 # ╔═╡ f38b198d-39cf-456f-a841-1ba08f206010
 function noisify(x::Number, s)
-	# your code here!
-	return missing
+	return clamp(x + rand((-s,s)), 0 ,1) 
 end
 
 # ╔═╡ f6fc1312-ee07-11ea-39a0-299b67aee3d8
@@ -482,8 +501,7 @@ Use your previous method for `noisify`. _(Remember that Julia chooses which meth
 
 # ╔═╡ db4bad9f-df1c-4640-bb34-dd2fe9bdce18
 function noisify(color::AbstractRGB, s)
-	# your code here!
-	return missing
+	return RGB(noisify(color.r, s),noisify(color.g, s) , noisify(color.b, s))
 end
 
 # ╔═╡ 0000b7f8-4c43-4dd8-8665-0dfe59e74c0a
@@ -516,8 +534,7 @@ md"""
 
 # ╔═╡ 21a5885d-00ab-428b-96c3-c28c98c4ca6d
 function noisify(image::AbstractMatrix, s)
-	# your code here!
-	return missing
+	return noisify.(image,s)
 end
 
 # ╔═╡ 1ea53f41-b791-40e2-a0f8-04e13d856829
@@ -568,7 +585,7 @@ You may need noise intensities larger than 1. Why?
 
 # ╔═╡ bdc2df7c-ee0c-11ea-2e9f-7d2c085617c1
 answer_about_noise_intensity = md"""
-The image is unrecognisable with intensity ...
+The image is unrecognisable with intensity ... 0.87
 """
 
 # ╔═╡ e87e0d14-43a5-490d-84d9-b14ece472061
@@ -1653,7 +1670,7 @@ uuid = "89763e89-9b03-5906-acba-b20f662cd828"
 version = "4.3.0+0"
 
 [[LinearAlgebra]]
-deps = ["Libdl"]
+deps = ["Libdl", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [[LogExpFunctions]]
@@ -1667,9 +1684,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[MKL_jll]]
 deps = ["Artifacts", "IntelOpenMP_jll", "JLLWrappers", "LazyArtifacts", "Libdl", "Pkg"]
-git-tree-sha1 = "c253236b0ed414624b083e6b72bfe891fbd2c7af"
+git-tree-sha1 = "5455aef09b40e5020e1520f551fa3135040d4ed0"
 uuid = "856f044c-d86e-5d09-b602-aeab76dc8ba7"
-version = "2021.1.1+1"
+version = "2021.1.1+2"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -1727,6 +1744,10 @@ deps = ["Adapt"]
 git-tree-sha1 = "c870a0d713b51e4b49be6432eff0e26a4325afee"
 uuid = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 version = "1.10.6"
+
+[[OpenBLAS_jll]]
+deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
+uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
 
 [[OpenEXR]]
 deps = ["Colors", "FileIO", "OpenEXR_jll"]
@@ -1812,7 +1833,7 @@ deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
 uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 
 [[Random]]
-deps = ["Serialization"]
+deps = ["SHA", "Serialization"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [[RangeArrays]]
@@ -1974,6 +1995,10 @@ git-tree-sha1 = "cc4bf3fdde8b7e3e9fa0351bdeedba1cf3b7f6e6"
 uuid = "3161d3a3-bdf6-5164-811a-617609db77b4"
 version = "1.5.0+0"
 
+[[libblastrampoline_jll]]
+deps = ["Artifacts", "Libdl", "OpenBLAS_jll"]
+uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
+
 [[libpng_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Zlib_jll"]
 git-tree-sha1 = "94d180a6d2b5e55e447e2d27a29ed04fe79eb30c"
@@ -1992,7 +2017,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╔═╡ Cell order:
 # ╟─8ef13896-ed68-11ea-160b-3550eeabbd7d
 # ╟─ac8ff080-ed61-11ea-3650-d9df06123e1f
-# ╠═911ccbce-ed68-11ea-3606-0384e7580d7c
+# ╟─911ccbce-ed68-11ea-3606-0384e7580d7c
 # ╟─5f95e01a-ee0a-11ea-030c-9dba276aba92
 # ╠═65780f00-ed6b-11ea-1ecf-8b35523a7ac0
 # ╟─54056a02-ee0a-11ea-101f-47feb6623bec
@@ -2002,7 +2027,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╟─ad6a33b0-eded-11ea-324c-cfabfd658b56
 # ╠═f51333a6-eded-11ea-34e6-bfbb3a69bcb0
 # ╟─b18e2c54-edf1-11ea-0cbf-85946d64b6a2
-# ╠═397941fc-edee-11ea-33f2-5d46c759fbf7
+# ╟─397941fc-edee-11ea-33f2-5d46c759fbf7
 # ╟─b1d5ca28-edf6-11ea-269e-75a9fb549f1d
 # ╟─5da8cbe8-eded-11ea-2e43-c5b7cc71e133
 # ╟─77adb065-bfd4-4680-9c2a-ad4d92689dbf
@@ -2022,8 +2047,8 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═ec5efe8c-edef-11ea-2c6f-afaaeb5bc50c
 # ╟─d6ddafdd-1a44-48c7-b49a-554073cdf331
 # ╟─29e10640-edf0-11ea-0398-17dbf4242de3
-# ╠═1267e961-5b75-4b55-8080-d45316a03b9b
 # ╠═38155b5a-edf0-11ea-3e3f-7163da7433fb
+# ╠═1267e961-5b75-4b55-8080-d45316a03b9b
 # ╟─adf476d8-a334-4b35-81e8-cc3b37de1f28
 # ╟─a5f8bafe-edf0-11ea-0da3-3330861ae43a
 # ╠═b6b65b94-edf0-11ea-3686-fbff0ff53d08
@@ -2032,8 +2057,8 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╟─aa1ff74a-4e78-4ef1-8b8d-3a60a168cf6d
 # ╟─e3394c8a-edf0-11ea-1bb8-619f7abb6881
 # ╟─e083b3e8-ed61-11ea-2ec9-217820b0a1b4
-# ╠═59414833-a108-4b1e-9a34-0f31dc907c6e
-# ╠═c5484572-ee05-11ea-0424-f37295c3072d
+# ╟─59414833-a108-4b1e-9a34-0f31dc907c6e
+# ╟─c5484572-ee05-11ea-0424-f37295c3072d
 # ╠═c8ecfe5c-ee05-11ea-322b-4b2714898831
 # ╟─e86ed944-ee05-11ea-3e0f-d70fc73b789c
 # ╠═6ccd8902-0dd9-4335-a11a-ee7f9a1a6c09
@@ -2062,6 +2087,9 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═21ba6e75-55a2-4614-9b5d-ea6378bf1d98
 # ╟─f7825c18-ff28-4e23-bf26-cc64f2f5049a
 # ╠═d994e178-78fd-46ab-a1bc-a31485423cad
+# ╠═775d1067-f25a-4d93-8de7-7e1f7aa4ae4e
+# ╠═5229678a-cafc-49d3-b30d-1672f3b9af59
+# ╠═039f5591-f3a0-407c-9274-d0a5745e35b4
 # ╟─c54ccdea-ee05-11ea-0365-23aaf053b7d7
 # ╠═f6898df6-ee07-11ea-2838-fde9bc739c11
 # ╠═5be9b144-ee0d-11ea-2a8d-8775de265a1d
