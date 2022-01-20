@@ -596,9 +596,9 @@ md"""
 # ╔═╡ ee5f21fb-1076-42b6-8926-8bbb6ed0ad67
 function custom_filter(pixel::AbstractRGB)
 	
-	# your code here!
 	
-	return pixel
+	
+	return RGB(pixel.b, pixel.r, pixel.g)
 end
 
 # ╔═╡ 9e5a08dd-332a-486b-94ab-15c49e72e522
